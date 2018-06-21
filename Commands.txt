@@ -1,0 +1,67 @@
+0 0 * * * /usr/bin/apt-get update
+//command that will be executed everyday at midnight
+//full path
+
+0 1 1 * * /usr/local/bin/monthly_cleanup.sh
+//executed everymonth on first day every first day
+//script
+---------------------------------------------------------------------------------------------------
+Windows
+A scheduled task consists of:
+? An action that specifies the program to be run.
+? A trigger that defines the time or system event that determines when the program is to be run.
+	-when it will be executed
+? A principal that identifies the context to use to execute an action.
+? Additional settings that further configure the task and control how the action is run
+---------------------------------------------------------------------------------------------------
+The action to be perform is specified with New-ScheduledTaskAction cmdlet. 	(setup)
+Define the trigger with New-ScheduledTaskTrigger cmdlet.					(setup)
+And finally, register the task with Register-ScheduledTask cmdlet.			(task started)
+
+--cli--
+$action = New-ScheduledTaskAction -Execute 'powershell.exe -command "calc.exe"'
+$trigger = New-ScheduledTaskTrigger -Once -At 4:00pm
+Register-ScheduledTask -Action $action -Trigger $trigger -TaskName "Start Calculator" -Description
+"Test scheduled task"
+
+//-Once/Daily/Monthly/Weekly
+
+Example 2. Run a script at 11:50pm daily.
+$myscript="C:\Users\User\Desktop\sample.ps1"    --> Try to execute first to test its working
+$action = New-ScheduledTaskAction -Execute 'powershell.exe -file $myscript -nologo -noprofile -
+nointeractive -windowstyle hidden'  --> Allows the powershell to run in background without any interraction with end user.
+$trigger = New-ScheduledTaskTrigger -Daily -At 11:50pm
+Register-ScheduledTask -Action $action -Trigger $trigger -TaskName "Start Clean Up" -Description
+"Clear temporary files"
+
+
+///once task registered, we can see the task in task scheduler.
+
+--powershell--
+$dirpath="$HOME\Desktop"
+schtasks /Create /SC DAILY /ST 23:00 /TN backup_data /TR "powershell.exe -file
+$dirpath\task_script.ps1
+
+---------------------------------------------------------------------------------------------------
+
+export PATH=$PATH;~/scc
+//append /scc at the end of the Path variable
+
+--cmd--
+set // list out all environment variables
+echo %path%
+
+set variable_name=value   //set for users
+setx variable_name=value  //set for everyone
+
+
+
+
+
+
+
+
+
+
+
+
